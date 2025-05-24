@@ -123,7 +123,7 @@ export function loadLevel(level) {
         );
 
         trapObjects.push(
-            new TrapObjects(2775, 250, 200, 100, '/imgs/blackBlock.png')
+            new TrapObjects(2775, 250, 200, 100, './imgs/blackBlock.png')
         );
 
         endLevelObject.push(
