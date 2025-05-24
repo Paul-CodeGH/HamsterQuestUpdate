@@ -1,25 +1,42 @@
-import { backgroundImage, ctx, canvas} from "./game.js";
+// Background.js
+import { backgroundImage, ctx, canvas } from "./game.js";
 import global from "./globals.js";
-
 
 class Background {
     constructor(imageSrc) {
-        this.imageSrc = imageSrc; // Image source path
-        this.image = new Image(); // Image object
-        this.image.src = imageSrc; // Set the image source
+        this.imageSrc = imageSrc;
+        this.image    = new Image();
+
+        // mark if load fails
+        this.broken = false;
+        this.image.onerror = () => {
+            console.warn(`Background load failed: ${imageSrc}`);
+            this.broken = true;
+        };
+
+        this.image.src = imageSrc;
         backgroundImage.push(this);
     }
 
     drawBackground() {
-        // Ensure the background starts at the left edge of the canvas
+        // skip if it never loaded
+        if (this.broken || !this.image.complete || this.image.naturalWidth === 0) {
+            return;
+        }
+
         const backgroundX = global.cameraX * global.backgroundSpeedFactor;
-    
-        // Draw the background image starting at the cameraX position
-        ctx.drawImage(this.image, backgroundX, 0, this.image.width, canvas.height);
-        // Draw the second part of the background image, creating the scrolling effect
-        ctx.drawImage(this.image, backgroundX + this.image.width, 0, this.image.width, canvas.height);
-        
-        
+
+        // draw the two halves for scrolling
+        ctx.drawImage(
+            this.image,
+            backgroundX, 0,
+            this.image.width, canvas.height
+        );
+        ctx.drawImage(
+            this.image,
+            backgroundX + this.image.width, 0,
+            this.image.width, canvas.height
+        );
     }
 }
 
