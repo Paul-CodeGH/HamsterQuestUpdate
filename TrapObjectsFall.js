@@ -1,3 +1,4 @@
+// TrapObjectsFall.js
 import { trapObjects, ctx } from "./game.js";
 import global from "./globals.js";
 
@@ -7,24 +8,26 @@ class TrapObjects {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.imageSrc = imageSrc; // Image source path
-        this.image = new Image(); // Image object
-        this.image.src = imageSrc; // Set the image source
-        trapObjects.push(this)
+
+        this.image = new Image();
+        // if load fails, flag so draw never attempts it
+        this.image.onerror = () => {
+            console.warn(`Failed to load trap image: ${imageSrc}`);
+            this.broken = true;
+        };
+        this.image.src = imageSrc;
+        trapObjects.push(this);
     }
 
     drawTrapObjects() {
-        const adjustedX = this.x - global.cameraX;  // Adjust for camera movement (if needed)
-        
-        // Draw the food image once it is loaded
-        if (this.image.complete) {
-            ctx.drawImage(this.image, adjustedX, this.y, this.width, this.height);
-        } else {
-            // If the image is not loaded, load it and draw
-            this.image.onload = () => {
-                ctx.drawImage(this.image, adjustedX, this.y, this.width, this.height);
-            };
-        }
+        if (this.broken) return;           // skip broken images
+        if (!this.image.complete) return;  // not yet loaded
+
+        // also guard against zero‐width images
+        if (this.image.naturalWidth === 0) return;
+
+        const adjustedX = this.x - global.cameraX;
+        ctx.drawImage(this.image, adjustedX, this.y, this.width, this.height);
     }
 }
 
