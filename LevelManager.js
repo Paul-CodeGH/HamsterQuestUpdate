@@ -179,7 +179,7 @@ export function loadLevel(level) {
         foods.push(
             new Food(3250, 800,100,100, './imgs/pizzaNoBG.png'),
             new Food(4250, 900,100,100, './imgs/pizzaNoBG.png'),
-            new Food( 970, 400,100,100, './imgs/pizzaNoBG.png'),
+            new Food(970, 400,100,100, './imgs/pizzaNoBG.png'),
             new Food(1500, 950,100,100, './imgs/pizzaNoBG.png')
         );
 
